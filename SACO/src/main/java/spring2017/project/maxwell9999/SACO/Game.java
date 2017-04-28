@@ -14,6 +14,10 @@ public class Game {
    public static final int ORANGE_STAR = 1;
    public static final int BLUE_MOON = 2;
 
+   private Player player1;
+   private Player player2;
+   private Opponent computer;
+   
    public Game() {
       // TODO Auto-generated constructor stub
    }
