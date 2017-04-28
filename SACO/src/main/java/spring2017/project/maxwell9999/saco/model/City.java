@@ -1,4 +1,4 @@
-package spring2017.project.maxwell9999.SACO;
+package spring2017.project.maxwell9999.saco.model;
 
 public class City extends Terrain {
 

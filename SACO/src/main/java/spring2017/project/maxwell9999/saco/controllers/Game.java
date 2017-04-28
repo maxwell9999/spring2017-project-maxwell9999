@@ -1,4 +1,6 @@
-package spring2017.project.maxwell9999.SACO;
+package spring2017.project.maxwell9999.saco.controllers;
+
+import spring2017.project.maxwell9999.saco.model.*;
 
 /**
  * @author maxwell
@@ -17,7 +19,7 @@ public class Game {
    private Player player1;
    private Player player2;
    private Opponent computer;
-   
+
    public Game() {
       // TODO Auto-generated constructor stub
    }

@@ -1,4 +1,4 @@
-package spring2017.project.maxwell9999.SACO;
+package spring2017.project.maxwell9999.saco.controllers;
 
 /**
  *
@@ -10,14 +10,14 @@ package spring2017.project.maxwell9999.SACO;
 
 public class Player {
 
-   
+
    private String name;
-   
+
    public Player(String name) {
       this.name = name;
    }
 
 
-   
+
 
 }
