@@ -8,5 +8,9 @@ addons:
   apt:
     packages:
       - oracle-java8-installer
+  sonarqube:
+    organization: "305"
 
-script: mvn -f SACO/pom.xml clean install
+script:
+    - mvn -f SACO/pom.xml clean install
+    - sonar-scanner
