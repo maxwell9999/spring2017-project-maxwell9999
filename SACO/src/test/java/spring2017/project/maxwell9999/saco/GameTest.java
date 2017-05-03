@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import spring2017.project.maxwell9999.saco.controllers.*;
+import spring2017.project.maxwell9999.saco.model.*;
 
 /**
  * Unit test for simple App.
@@ -35,6 +36,16 @@ public class GameTest
      */
     public void testGame()
     {
-        assertTrue(new Game() != null);
+        assertTrue(new Game("SACO") != null);
     }
+
+    /**
+     * Rigourous Test :-)
+     */
+    public void testPlain()
+    {
+       // can't test ui with slick2D
+       //assertTrue(new Plain(1, 20, false, 1) != null);
+    }
+
 }

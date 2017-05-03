@@ -1,10 +1,18 @@
 package spring2017.project.maxwell9999.saco.model;
 
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+
 public class Plain extends Terrain {
 
-   public Plain(int movementCost, int health, boolean capturable, int team/*, String filename*/) {
+   public Plain(int movementCost, int health, boolean capturable, int team) {
       super(movementCost, health, capturable, team);
-      //icon = new Image(filename);
+      try {
+         icon = new Image("resources/images/plain.gif");
+      } catch (SlickException e) {
+         System.err.println("Invalid terrain resource filename.");
+         e.printStackTrace();
+      }
    }
 
 }
