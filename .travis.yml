@@ -12,5 +12,4 @@ addons:
     organization: "305"
 
 script:
-    - mvn -f SACO/pom.xml clean install
-    - sonar-scanner
+    - mvn -f SACO/pom.xml clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
