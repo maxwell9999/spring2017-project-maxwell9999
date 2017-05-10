@@ -1,11 +1,10 @@
-package spring2017.project.maxwell9999.saco;
+package project.spring2017.maxwell9999.saco.test;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import spring2017.project.maxwell9999.saco.controllers.*;
-import spring2017.project.maxwell9999.saco.model.*;
+import project.spring2017.maxwell9999.saco.controllers.*;
+import project.spring2017.maxwell9999.saco.model.*;
 
 /**
  * Unit test for simple App.

@@ -1,4 +1,4 @@
-package spring2017.project.maxwell9999.saco.view;
+package project.spring2017.maxwell9999.saco.view;
 
 public class Drawer {
 

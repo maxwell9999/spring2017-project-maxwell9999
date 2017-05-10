@@ -1,8 +1,8 @@
-package spring2017.project.maxwell9999.saco.model;
+package project.spring2017.maxwell9999.saco.model;
 
 public abstract class Unit {
 
-   String ID;
+   String id;
    int team;
    int health;
    boolean terrainAffected;

@@ -1,12 +1,12 @@
-package spring2017.project.maxwell9999.saco.controllers;
+package project.spring2017.maxwell9999.saco.controllers;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
-import spring2017.project.maxwell9999.saco.model.*;
-import spring2017.project.maxwell9999.saco.view.*;
+import project.spring2017.maxwell9999.saco.model.*;
+import project.spring2017.maxwell9999.saco.view.*;
 
 
 /**

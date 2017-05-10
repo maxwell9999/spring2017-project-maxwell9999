@@ -1,4 +1,4 @@
-package spring2017.project.maxwell9999.saco.controllers;
+package project.spring2017.maxwell9999.saco.controllers;
 
 public class Opponent {
 

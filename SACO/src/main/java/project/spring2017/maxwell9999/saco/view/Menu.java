@@ -1,4 +1,4 @@
-package spring2017.project.maxwell9999.saco.view;
+package project.spring2017.maxwell9999.saco.view;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -6,7 +6,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import spring2017.project.maxwell9999.saco.controllers.Game;
+import project.spring2017.maxwell9999.saco.controllers.Game;
 
 public class Menu extends BasicGameState {
 
