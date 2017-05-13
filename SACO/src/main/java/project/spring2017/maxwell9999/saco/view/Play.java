@@ -9,24 +9,33 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import project.spring2017.maxwell9999.saco.controllers.Game;
 
-public class Menu extends BasicGameState {
+public class Play extends BasicGameState {
 
-   public Menu() {
+   public Play() {
       // TODO Auto-generated constructor stub
    }
 
    @Override
    public void init(GameContainer arg0, StateBasedGame arg1) throws SlickException {
-
+      Image background = new Image("resources/images/background.gif");
 
    }
 
    @Override
    public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2) throws SlickException {
 
-      //render the logo
-      Image splash = new Image("resources/images/splash.jpg");
-      splash.draw(10, 10, 4);
+      //render the map
+
+      Image plain = new Image("resources/images/plain.gif");
+
+      //render 10 rows
+      for (int i = 0; i < 10; i++) {
+         //render 10 columns
+         for (int j = 0; j < 10; j++) {
+            plain.draw(432 + 16 * i, 280 + 16 * j);
+         }
+      }
+
 
    }
 
@@ -38,7 +47,7 @@ public class Menu extends BasicGameState {
 
    @Override
    public int getID() {
-      return Game.MENU_STATE;
+      return Game.PLAY_STATE;
    }
 
 }

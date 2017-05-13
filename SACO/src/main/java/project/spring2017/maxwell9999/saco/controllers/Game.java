@@ -22,6 +22,7 @@ public class Game extends StateBasedGame {
 
    //game states
    public static final int MENU_STATE = 0;
+   public static final int PLAY_STATE = 1;
 
    public static final int ORANGE_STAR = 1;
    public static final int BLUE_MOON = 2;
@@ -33,26 +34,39 @@ public class Game extends StateBasedGame {
    public Game(String title) {
       super(title);
       this.addState(new Menu());
+      this.addState(new Play());
    }
 
    public void battle(Unit attacker, Unit defender) {
       //
    }
 
+
+   public void displayMoveOptions(Unit unit) {
+
+   }
+
+   public void move(Unit unit, Square square) {
+
+   }
+
    @Override
    public void initStatesList(GameContainer arg0) throws SlickException {
-      enterState(MENU_STATE);
+      enterState(PLAY_STATE);
    }
+
+
+
+
 
    public static void main(String[] args) {
       AppGameContainer appGameContainer;
 
       try {
          appGameContainer = new AppGameContainer(new Game("SACO"));
-         appGameContainer.setDisplayMode(100, 100, false);
+         appGameContainer.setDisplayMode(1024, 720, false);
          appGameContainer.start();
       } catch (SlickException e) {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
    }

@@ -6,5 +6,5 @@ public class Base extends Terrain {
       super(movementCost, health, capturable, team);
       //icon = new Image(filename);
    }
-
+   
 }
