@@ -22,8 +22,6 @@ public class Play extends BasicGameState {
 
    @Override
    public void init(GameContainer arg0, StateBasedGame arg1) throws SlickException {
-      Image background = new Image("resources/images/background.gif");
-
    }
 
    @Override
@@ -40,9 +38,9 @@ public class Play extends BasicGameState {
       Image bmInfantry = new Image("resources/images/bminfantry.gif");
 
       //render rows
-      for (int i = 0; i < 10; i++) {
+      for (int i = 0; i < map.rows(); i++) {
          //render columns
-         for (int j = 0; j < 10; j++) {
+         for (int j = 0; j < map.cols(); j++) {
             Square currentSquare = map.getSquare(i, j);
             switch (currentSquare.getTerrain().getClass().toString()) {
                case "class project.spring2017.maxwell9999.saco.model.Plain":

@@ -41,8 +41,13 @@ public class Map {
       grid[row][col] = newSquare;
    }
 
-   public int rows() {return rows;}
-   public int cols() {return cols;}
+   public int rows() {
+      return rows;
+   }
+
+   public int cols() {
+      return cols;
+   }
 
    public Unit getUnit(int index) {
       return units.get(index);
