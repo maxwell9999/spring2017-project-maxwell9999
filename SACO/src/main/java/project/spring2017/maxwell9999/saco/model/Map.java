@@ -17,17 +17,28 @@ public class Map {
    private int rows, cols;
    private ArrayList<Unit> units;
 
-   public Map(Square[][] grid, int rows, int cols) {
-      this.grid = grid;
+   public Map(int rows, int cols) {
       this.rows = rows;
       this.cols = cols;
 
+      grid = new Square[rows][cols];
       units = new ArrayList<Unit>();
    }
 
    // getters
    public Square getSquare(int row, int col) {
       return grid[row][col];
+   }
+
+   // setter
+   public void setSquare(int row, int col, Terrain terrain, Unit unit) {
+      Square newSquare;
+      if (unit == null) {
+         newSquare = new Square(row, col, terrain);
+      } else {
+         newSquare = new Square(row, col, terrain, unit);
+      }
+      grid[row][col] = newSquare;
    }
 
    public int rows() {return rows;}
@@ -45,5 +56,4 @@ public class Map {
    public void addUnit(Unit u) {
       units.add(u);
    }
-
 }

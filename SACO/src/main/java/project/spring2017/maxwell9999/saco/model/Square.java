@@ -42,6 +42,10 @@ public class Square {
       return this.unit;
    }
 
+   public Terrain getTerrain() {
+      return this.terrain;
+   }
+
    public void capture() {
       if (unit == null) {
          return;

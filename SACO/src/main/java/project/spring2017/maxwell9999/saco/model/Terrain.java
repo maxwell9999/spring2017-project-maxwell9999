@@ -1,18 +1,16 @@
 package project.spring2017.maxwell9999.saco.model;
 
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
-
 public abstract class Terrain {
 
    private int movementCost;
+   private int defense;
    private int health = 20;
    private boolean capturable;
    private int team;
-   Image icon; // slick2d image
 
-   public Terrain(int movementCost, int health, boolean capturable, int team) {
+   public Terrain(int movementCost, int defense, int health, boolean capturable, int team) {
       this.movementCost = movementCost;
+      this.defense = defense;
       this.capturable = capturable;
       this.team = team;
    }

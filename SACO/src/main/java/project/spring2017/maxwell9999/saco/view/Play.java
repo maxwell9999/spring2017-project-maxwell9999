@@ -8,11 +8,16 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import project.spring2017.maxwell9999.saco.controllers.Game;
+import project.spring2017.maxwell9999.saco.model.Map;
+import project.spring2017.maxwell9999.saco.model.Square;
+import project.spring2017.maxwell9999.saco.model.Unit;
 
 public class Play extends BasicGameState {
 
-   public Play() {
-      // TODO Auto-generated constructor stub
+   private Map map;
+
+   public Play(Map map) {
+      this.map = map;
    }
 
    @Override
@@ -25,14 +30,50 @@ public class Play extends BasicGameState {
    public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2) throws SlickException {
 
       //render the map
-
+      // load terrain resources
       Image plain = new Image("resources/images/plain.gif");
+      Image wood = new Image("resources/images/wood.gif");
+      Image mountain = new Image("resources/images/mountain.gif");
 
-      //render 10 rows
+      // load unit resources
+      Image osInfantry = new Image("resources/images/osinfantry.gif");
+      Image bmInfantry = new Image("resources/images/bminfantry.gif");
+
+      //render rows
       for (int i = 0; i < 10; i++) {
-         //render 10 columns
+         //render columns
          for (int j = 0; j < 10; j++) {
-            plain.draw(432 + 16 * i, 280 + 16 * j);
+            Square currentSquare = map.getSquare(i, j);
+            switch (currentSquare.getTerrain().getClass().toString()) {
+               case "class project.spring2017.maxwell9999.saco.model.Plain":
+                  plain.draw(432 + 16 * i, 280 + 16 * j);
+                  break;
+               case "class project.spring2017.maxwell9999.saco.model.Wood":
+                  wood.draw(432 + 16 * i, 280 + 16 * j);
+                  break;
+               case "class project.spring2017.maxwell9999.saco.model.Mountain":
+                  //accounts for extra height of mountain image
+                  mountain.draw(432 + 16 * i, 280 + 16 * (j-1) + 11);
+                  break;
+               default :
+                  plain.draw(432 + 16 * i, 280 + 16 * j);
+            }
+
+            Unit currentUnit = currentSquare.getUnit();
+
+            if (currentUnit == null) {
+               continue;
+            }
+
+            switch (currentUnit.getClass().toString()) {
+               case "class project.spring2017.maxwell9999.saco.model.Infantry":
+                  if (currentUnit.getTeam() == Game.ORANGE_STAR) {
+                     osInfantry.draw(432 + 16 * i, 280 + 16 * j);
+                  } else {
+                     bmInfantry.draw(432 + 16 * i, 280 + 16 * j);
+                  }
+                  break;
+            }
          }
       }
 

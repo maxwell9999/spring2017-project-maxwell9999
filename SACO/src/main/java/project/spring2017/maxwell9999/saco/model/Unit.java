@@ -17,4 +17,8 @@ public abstract class Unit {
       this.cost = cost;
    }
 
+   public int getTeam() {
+      return team;
+   }
+
 }
