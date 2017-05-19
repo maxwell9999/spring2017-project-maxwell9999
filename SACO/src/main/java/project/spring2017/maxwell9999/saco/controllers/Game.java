@@ -26,6 +26,9 @@ import project.spring2017.maxwell9999.saco.view.*;
  */
 public class Game extends StateBasedGame {
 
+   public static final int SCREEN_WIDTH = 1024;
+   public static final int SCREEN_HEIGHT = 720;
+
    //game states
    public static final int MENU_STATE = 0;
    public static final int PLAY_STATE = 1;
@@ -43,9 +46,9 @@ public class Game extends StateBasedGame {
 
    public Game(String title) {
       super(title);
-      this.mapRead("resources/maps/testmap");
+      this.mapRead("resources/maps/testmap2");
       this.addState(new Menu());
-      this.addState(new Play(map));
+      this.addState(new Play(map, mapTitle));
    }
 
    public void battle(Unit attacker, Unit defender) {
@@ -59,11 +62,6 @@ public class Game extends StateBasedGame {
 
    public void move(Unit unit, Square square) {
 
-   }
-
-   @Override
-   public void initStatesList(GameContainer arg0) throws SlickException {
-      enterState(PLAY_STATE);
    }
 
    /**
@@ -172,6 +170,7 @@ public class Game extends StateBasedGame {
          }
 
          if (numOfSquares != rowVal*colVal) {
+            System.out.println("Incorrect file length");
             //throw new FileFormatException();
          }
 
@@ -190,13 +189,17 @@ public class Game extends StateBasedGame {
 
 
 
+   @Override
+   public void initStatesList(GameContainer arg0) throws SlickException {
+      enterState(MENU_STATE);
+   }
 
    public static void main(String[] args) {
       AppGameContainer appGameContainer;
 
       try {
          appGameContainer = new AppGameContainer(new Game("SACO"));
-         appGameContainer.setDisplayMode(1024, 720, false);
+         appGameContainer.setDisplayMode(SCREEN_WIDTH, SCREEN_HEIGHT, false);
          appGameContainer.start();
       } catch (SlickException e) {
          e.printStackTrace();
