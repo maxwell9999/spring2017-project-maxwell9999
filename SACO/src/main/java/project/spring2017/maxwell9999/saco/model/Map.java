@@ -27,6 +27,9 @@ public class Map {
 
    // getters
    public Square getSquare(int row, int col) {
+      if (row > rows - 1 || col > cols - 1) {
+         return null;
+      }
       return grid[row][col];
    }
 

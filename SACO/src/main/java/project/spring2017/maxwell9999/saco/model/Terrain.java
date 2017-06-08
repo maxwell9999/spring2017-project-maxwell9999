@@ -27,7 +27,7 @@ public abstract class Terrain {
       this.health = health;
    }
 
-   public int capure(int power) {
+   public int capture(int power) {
       this.health -= power;
       return this.health;
    }
@@ -38,5 +38,9 @@ public abstract class Terrain {
 
    public boolean isCapturable() {
       return capturable;
+   }
+
+   public int getDefense() {
+      return defense;
    }
 }

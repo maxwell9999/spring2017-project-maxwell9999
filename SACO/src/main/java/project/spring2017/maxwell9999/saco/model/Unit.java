@@ -4,7 +4,7 @@ public abstract class Unit {
 
    int id;
    int team;
-   int health = 10;
+   double health = 10;
    boolean terrainAffected;
    int movement; // maximum number of squares moved per turn
    int cost;
@@ -17,8 +17,27 @@ public abstract class Unit {
       this.cost = cost;
    }
 
+   public int getID() {
+      return id;
+   }
+
    public int getTeam() {
       return team;
    }
 
+   public double getHealth() {
+      return health;
+   }
+
+   public int getMovement() {
+      return movement;
+   }
+
+   public int getCost() {
+      return cost;
+   }
+
+   public void dealDamage(double damage) {
+      health -= damage;
+   }
 }

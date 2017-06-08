@@ -22,6 +22,14 @@ public class Square {
       this.unit = unit;
    }
 
+   public int getRow() {
+      return row;
+   }
+
+   public int getCol() {
+      return col;
+   }
+
    public int x() {
       return SQUARE_SIZE * col;
    }
@@ -50,7 +58,7 @@ public class Square {
       if (unit == null) {
          return;
       }
-      int healthRemaining = terrain.capure(this.unit.health);
+      int healthRemaining = terrain.capture((int) this.unit.health);
       if (healthRemaining <= 0) {
          terrain.setTeam(unit.team);
       }
