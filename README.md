@@ -34,6 +34,7 @@ Advance Wars information: http://advancewars.wikia.com/wiki/Advance_Wars_(game)
 ## Part 3: SACO Code Documentation
 
 ### MVC Architecture
+![Class Diagram](SACOClassDiagram-Updated.png?raw=true "Class Diagram")
 
 ### Design Patterns Used:
 - Singleton Pattern for resource files
