@@ -52,6 +52,10 @@ public class Map {
       return cols;
    }
 
+   public ArrayList<Unit> getUnits() {
+      return units;
+   }
+
    public Unit getUnit(int index) {
       return units.get(index);
    }
@@ -61,8 +65,12 @@ public class Map {
    }
 
    //
-   public void addUnit(Unit u) {
-      units.add(u);
+   public void addUnit(Unit unit) {
+      units.add(unit);
+   }
+
+   public void removeUnit(Unit unit) {
+      units.remove(unit);
    }
 
    public void clearAllMoveAttackOptions() {

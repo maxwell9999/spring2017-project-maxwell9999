@@ -24,6 +24,8 @@ public class Play extends BasicGameState {
    boolean showUnitMenu = false;
    boolean showBuyButton = false;
    boolean showTerrainInfo = false;
+   boolean moveButtonSelected = false;
+   boolean attackButtonSelected = false;
 
    Unit lastClickedUnit = null;
    Square lastClickedSquare = null;
@@ -66,6 +68,8 @@ public class Play extends BasicGameState {
 
    Image osInfantry;
    Image bmInfantry;
+   Image gs_osInfantry;
+   Image gs_bmInfantry;
 
    private Game game;
    private Map map;
@@ -111,6 +115,8 @@ public class Play extends BasicGameState {
       // load unit related resources
       osInfantry = new Image("resources/images/osinfantry.gif");
       bmInfantry = new Image("resources/images/bminfantry.gif");
+      gs_osInfantry = new Image("resources/images/gs_osinfantry.gif");
+      gs_bmInfantry = new Image("resources/images/gs_bminfantry.gif");
 
       captureIcon = new Image("resources/images/selected.gif");
       selected = new Image("resources/images/selected.gif");
@@ -138,6 +144,13 @@ public class Play extends BasicGameState {
       }
 //      displayTerrainInfo();
 
+
+      if (moveButtonSelected) {
+         helpText += "Click a highlighted square\nto move to it.";
+      }
+      if (attackButtonSelected) {
+         helpText += "Click a highlighted enemy\nto attack to it.";
+      }
       if (helpText == "") {
          helpText = "Click a square for unit, building\nand terrain information and options.";
       }
@@ -187,6 +200,7 @@ public class Play extends BasicGameState {
          }
          if (lastClickedSquare.getInAttackRange() == true) {
             game.battle(previousClickedSquare, lastClickedSquare);
+            lastClickedUnit.setActive(false);
          }
          if (unit != null) {
             map.clearAllMoveAttackOptions();
@@ -211,7 +225,7 @@ public class Play extends BasicGameState {
       // buy infantry button
       if (mouseX >= 25 && mouseX <= 197 && mouseY >= 300 && mouseY <= 340) {
          UnitFactory unitFactory = new UnitFactory();
-         Unit newUnit = unitFactory.createUnit("inf", game.getCurrentTeamTurn());
+         Unit newUnit = unitFactory.createUnit("inf", game.getCurrentTeamTurn(), false);
          lastClickedSquare.setUnit(newUnit);
          map.addUnit(newUnit);
          return true;
@@ -219,27 +233,37 @@ public class Play extends BasicGameState {
       // move button
       if (mouseX >= 25 && mouseX <= 121 && mouseY >= 360 && mouseY <= 400) {
          map.clearAllMoveAttackOptions();
-         game.findMoveOptions(lastClickedSquare);
-         helpText += "Click a highlighted square\nto move to it.";
+         if (lastClickedUnit.canStillMove()) {
+            game.findMoveOptions(lastClickedSquare);
+            moveButtonSelected = true;
+         }
+         lastClickedUnit.setCanStillMove(false);
          return true;
       }
       // attack button
       if (mouseX >= 25 && mouseX <= 130 && mouseY >= 420 && mouseY <= 460) {
          map.clearAllMoveAttackOptions();
          game.findBattleOptions(lastClickedSquare);
-         helpText += "Click a highlighted enemy\nto attack to it.";
+         attackButtonSelected = true;
          return true;
       }
       // capture button
       if (mouseX >= 150 && mouseX <= 270 && mouseY >= 420 && mouseY <= 460) {
+         if (lastClickedUnit.canStillCapture() && lastClickedSquare.getTerrain().isCapturable()) {
+            lastClickedSquare.capture();
+         }
+         lastClickedUnit.setCanStillCapture(false);
          return true;
       }
       // wait button
       if (mouseX >= 25 && mouseX <= 113 && mouseY >= 480 && mouseY <= 520) {
+         lastClickedUnit.setActive(false);
          return true;
       }
       // delete button
       if (mouseX >= 150 && mouseX <= 254 && mouseY >= 480 && mouseY <= 520) {
+         map.removeUnit(lastClickedUnit);
+         lastClickedSquare.setUnit(null);
          return true;
       }
       // end turn button
@@ -376,9 +400,17 @@ public class Play extends BasicGameState {
             switch (currentUnit.getClass().toString()) {
                case "class project.spring2017.maxwell9999.saco.model.Infantry":
                   if (currentUnit.getTeam() == Game.ORANGE_STAR) {
-                     osInfantry.draw(leftMostX + 16 * i, upperMostY + 16 * j);
+                     if (currentUnit.getActive()) {
+                        osInfantry.draw(leftMostX + 16 * i, upperMostY + 16 * j);
+                     } else {
+                        gs_osInfantry.draw(leftMostX + 16 * i, upperMostY + 16 * j);
+                     }
                   } else {
-                     bmInfantry.draw(leftMostX + 16 * i, upperMostY + 16 * j);
+                     if (currentUnit.getActive()) {
+                        bmInfantry.draw(leftMostX + 16 * i, upperMostY + 16 * j);
+                     } else {
+                        gs_bmInfantry.draw(leftMostX + 16 * i, upperMostY + 16 * j);
+                     }
                   }
                   break;
             }

@@ -101,11 +101,13 @@ public class Game extends StateBasedGame {
       Unit defendingUnit = defender.getUnit();
       defendingUnit.dealDamage(calculateDamage(attacker, defender)/100);
       if (defendingUnit.getHealth() <= 0) {
+         map.removeUnit(defendingUnit);
          defender.setUnit(null);
       } else {
          attackingUnit.dealDamage(calculateDamage(defender, attacker)/100);
       }
       if (attackingUnit.getHealth() <= 0) {
+         map.removeUnit(attackingUnit);
          attacker.setUnit(null);
       }
       map.clearAllMoveAttackOptions();
@@ -287,10 +289,10 @@ public class Game extends StateBasedGame {
 
                switch (nextLine[1].trim()) {
                   case "osinfantry":
-                     unit = unitFactory.createUnit("inf", ORANGE_STAR);
+                     unit = unitFactory.createUnit("inf", ORANGE_STAR, true);
                      break;
                   case "bminfantry":
-                     unit = unitFactory.createUnit("inf", BLUE_MOON);
+                     unit = unitFactory.createUnit("inf", BLUE_MOON, true);
                      break;
                   default :
                      unit = null;
@@ -333,6 +335,13 @@ public class Game extends StateBasedGame {
 
    public void endCurrentTeamTurn() {
       currentTeamTurn = (currentTeamTurn == ORANGE_STAR) ? BLUE_MOON : ORANGE_STAR;
+      for (Unit unit : map.getUnits()) {
+         if (unit.getTeam() == currentTeamTurn) {
+            unit.setActive(true);
+            unit.setCanStillCapture(true);
+            unit.setCanStillMove(true);
+         }
+      }
    }
 
    @Override

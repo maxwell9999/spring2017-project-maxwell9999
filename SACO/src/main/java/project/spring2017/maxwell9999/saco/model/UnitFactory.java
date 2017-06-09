@@ -8,10 +8,10 @@ public class UnitFactory {
       this.id = 0;
    }
 
-   public Unit createUnit(String type, int team) {
+   public Unit createUnit(String type, int team, boolean active) {
       id++;
       if (type == "inf") {
-         return new Infantry(team, this.id);
+         return new Infantry(team, this.id, active);
       } else {
          return null;
       }

@@ -8,13 +8,18 @@ public abstract class Unit {
    boolean terrainAffected;
    int movement; // maximum number of squares moved per turn
    int cost;
+   boolean active;
+   boolean canStillMove = true;
+   boolean canStillCapture = true;
+   //boolean canStillAttack;
 
-   public Unit(int id, int team, boolean terrainAffected, int movement, int cost) {
+   public Unit(int id, int team, boolean terrainAffected, int movement, int cost, boolean active) {
       this.id = id;
       this.team = team;
       this.terrainAffected = terrainAffected;
       this.movement = movement;
       this.cost = cost;
+      this.active = active;
    }
 
    public int getID() {
@@ -37,7 +42,35 @@ public abstract class Unit {
       return cost;
    }
 
+   public boolean getActive() {
+      return active;
+   }
+
+   public void setActive(boolean active) {
+      this.active = active;
+   }
+
+   public boolean canStillMove() {
+      return canStillMove;
+   }
+
+   public void setCanStillMove(boolean canStillMove) {
+      this.canStillMove = canStillMove;
+   }
+
+   public boolean canStillCapture() {
+      return canStillCapture;
+   }
+
+   public void setCanStillCapture(boolean canStillCapture) {
+      this.canStillCapture = canStillCapture;
+   }
+
    public void dealDamage(double damage) {
       health -= damage;
+   }
+
+   public boolean equals(Unit unit) {
+      return this.id == unit.id;
    }
 }
