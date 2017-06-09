@@ -42,6 +42,10 @@ public class Square {
       this.inMoveRange = inMoveRange;
    }
 
+   public boolean getInMoveRange() {
+      return inMoveRange;
+   }
+
    public void setUnit(Unit unit) {
       this.unit = unit;
    }

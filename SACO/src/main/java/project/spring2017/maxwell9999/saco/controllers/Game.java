@@ -48,15 +48,17 @@ public class Game extends StateBasedGame {
    private Player player1;
    private Player player2;
    private Opponent computer;
+   private int currentTeamTurn;
 
    private Map map;
    private String mapTitle;
 
    public Game(String title) {
       super(title);
-      this.mapRead("resources/maps/testmap");
+      this.mapRead("resources/maps/testmap2");
       this.addState(new Menu());
-      this.addState(new Play(map, mapTitle));
+      this.addState(new Play(this, mapTitle));
+      this.currentTeamTurn = ORANGE_STAR;
    }
 
    public double calculateDamage(Square attacker, Square defender) {
@@ -87,13 +89,10 @@ public class Game extends StateBasedGame {
 
    public void findMoveOptions(Square currentSquare) {
 
-      ArrayList<Square> moveOptions = new ArrayList<Square>();
-      findMoveOptionsRecurs(currentSquare.getUnit(), currentSquare, 0, moveOptions, 0);
-
+      findMoveOptionsRecurs(currentSquare.getUnit(), currentSquare, 0, 0);
    }
 
-   private void findMoveOptionsRecurs(Unit unit, Square currentSquare, int distanceTraveled,
-                                      ArrayList<Square> moveOptions, int lastDirection) {
+   private void findMoveOptionsRecurs(Unit unit, Square currentSquare, int terrainCovered, int lastDirection) {
 
       //is this square in the board?
       if (currentSquare == null) {
@@ -110,40 +109,44 @@ public class Game extends StateBasedGame {
       //subtract movementCost of terrain from movement of unit
       //if non-negative
       //add to move options
-      if (lastDirection != 0 && unit.getMovement() - distanceTraveled >= 0) {
-         moveOptions.add(currentSquare);
+      if (unit.getMovement() - terrainCovered < currentSquare.getTerrain().getMovementCost()) {
+         return;
+      } else if (lastDirection != 0) {
+         currentSquare.setInMoveRange(true);
+         terrainCovered += currentSquare.getTerrain().getMovementCost();
       }
 
       //recursively check in each cardinal directionto determine possible moves
       //(except the square we just came from)
       Square nextSquare;
-      distanceTraveled += currentSquare.getTerrain().getMovementCost();
       //North
       if (lastDirection != SOUTH) {
          nextSquare = map.getSquare(currentSquare.getRow(), currentSquare.getCol() - 1);
-         findMoveOptionsRecurs(unit, currentSquare, distanceTraveled, moveOptions, NORTH);
+         findMoveOptionsRecurs(unit, nextSquare, terrainCovered, NORTH);
       }
       //East
       if (lastDirection != WEST) {
          nextSquare = map.getSquare(currentSquare.getRow() + 1, currentSquare.getCol());
-         findMoveOptionsRecurs(unit, nextSquare, distanceTraveled, moveOptions, EAST);
+         findMoveOptionsRecurs(unit, nextSquare, terrainCovered, EAST);
       }
       //South
       if (lastDirection != NORTH) {
          nextSquare = map.getSquare(currentSquare.getRow(), currentSquare.getCol() + 1);
-         findMoveOptionsRecurs(unit, nextSquare, distanceTraveled, moveOptions, SOUTH);
+         findMoveOptionsRecurs(unit, nextSquare, terrainCovered, SOUTH);
       }
       //West
       if (lastDirection != EAST) {
          nextSquare = map.getSquare(currentSquare.getRow() - 1, currentSquare.getCol());
-         findMoveOptionsRecurs(unit, nextSquare, distanceTraveled, moveOptions, WEST);
+         findMoveOptionsRecurs(unit, nextSquare, terrainCovered, WEST);
       }
 
    }
 
-   public void move(Unit unit, Square square) {
-
-
+   public void move(Square start, Square end) {
+      Unit moving = start.getUnit();
+      start.setUnit(null);
+      end.setUnit(moving);
+      map.clearAllMoveOptions();
    }
 
    /**
@@ -198,13 +201,16 @@ public class Game extends StateBasedGame {
                   case "mountain":
                      terrain = new Mountain(2, 4, 20, false, NEUTRAL);
                      break;
+                  case "sea":
+                     terrain = new Sea(1000, 1, 20, false, NEUTRAL);
+                     break;
                   case "croad":
                      //terrain = new Road(1, 0, 20, false, NEUTRAL, orientationString);
                      break;
                   case "neutralbase":
                      terrain = new Base(2, 3, 20, true, NEUTRAL);
                      break;
-                  case "neutral city":
+                  case "neutralcity":
                      terrain = new City(2, 3, 20, true, ORANGE_STAR);
                      break;
                   case "orangestarhq":
@@ -225,9 +231,6 @@ public class Game extends StateBasedGame {
                   case "bluemooncity":
                      terrain = new City(2, 3, 20, true, BLUE_MOON);
                      break;
-                  default :
-                     terrain = new Plain(1, 1, 20, false, NEUTRAL);
-
                }
 
                UnitFactory unitFactory = new UnitFactory();
@@ -270,6 +273,18 @@ public class Game extends StateBasedGame {
     */
 
 
+
+   public Map getMap() {
+      return map;
+   }
+
+   public int getCurrentTeamTurn() {
+      return currentTeamTurn;
+   }
+
+   public void endCurrentTeamTurn() {
+      currentTeamTurn = (currentTeamTurn == ORANGE_STAR) ? BLUE_MOON : ORANGE_STAR;
+   }
 
    @Override
    public void initStatesList(GameContainer arg0) throws SlickException {

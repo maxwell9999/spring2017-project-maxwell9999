@@ -27,7 +27,7 @@ public class Map {
 
    // getters
    public Square getSquare(int row, int col) {
-      if (row > rows - 1 || col > cols - 1) {
+      if (row < 0 || row > rows - 1|| col < 0 || col > cols - 1) {
          return null;
       }
       return grid[row][col];
@@ -63,5 +63,13 @@ public class Map {
    //
    public void addUnit(Unit u) {
       units.add(u);
+   }
+
+   public void clearAllMoveOptions() {
+      for (int i = 0; i < rows; i++) {
+         for (int j = 0; j < cols; j++) {
+            grid[i][j].setInMoveRange(false);
+         }
+      }
    }
 }

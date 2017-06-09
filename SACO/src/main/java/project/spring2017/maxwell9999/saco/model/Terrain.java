@@ -43,4 +43,8 @@ public abstract class Terrain {
    public int getDefense() {
       return defense;
    }
+
+   public int getTeam() {
+      return team;
+   }
 }
