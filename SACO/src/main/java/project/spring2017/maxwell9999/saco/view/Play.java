@@ -17,6 +17,7 @@ import project.spring2017.maxwell9999.saco.controllers.Game;
 import project.spring2017.maxwell9999.saco.model.Map;
 import project.spring2017.maxwell9999.saco.model.Square;
 import project.spring2017.maxwell9999.saco.model.Unit;
+import project.spring2017.maxwell9999.saco.model.UnitFactory;
 
 public class Play extends BasicGameState {
 
@@ -53,6 +54,7 @@ public class Play extends BasicGameState {
    Image delete;
 
    Image selected;
+   Image captureIcon;
 
    Image buyInfantry;
 
@@ -106,10 +108,11 @@ public class Play extends BasicGameState {
       bluemoonbase = new Image("resources/images/bluemoonbase.gif");
       bluemooncity = new Image("resources/images/bluemooncity.gif");
 
-      // load unit resources
+      // load unit related resources
       osInfantry = new Image("resources/images/osinfantry.gif");
       bmInfantry = new Image("resources/images/bminfantry.gif");
 
+      captureIcon = new Image("resources/images/selected.gif");
       selected = new Image("resources/images/selected.gif");
       selected.setAlpha((float) 0.5);
 
@@ -118,12 +121,6 @@ public class Play extends BasicGameState {
 
    @Override
    public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2) throws SlickException {
-
-      staticsRenderer();
-      helpTextRenderer();
-      displayEndTurnButton();
-
-      helpText = "";
 
       if (inputHandler.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
          int mouseX = inputHandler.getMouseX();
@@ -146,6 +143,12 @@ public class Play extends BasicGameState {
       }
 
       boardRenderer();
+
+      staticsRenderer();
+      helpTextRenderer();
+      displayEndTurnButton();
+
+      helpText = "";
    }
 
    @Override
@@ -182,15 +185,20 @@ public class Play extends BasicGameState {
          if (lastClickedSquare.getInMoveRange() == true) {
             game.move(previousClickedSquare, lastClickedSquare);
          }
+         if (lastClickedSquare.getInAttackRange() == true) {
+            game.battle(previousClickedSquare, lastClickedSquare);
+         }
          if (unit != null) {
-            map.clearAllMoveOptions();
+            map.clearAllMoveAttackOptions();
             lastClickedUnit = unit;
             showUnitMenu = true;
          } else {
             showUnitMenu = false;
          }
          if (lastClickedSquare.getTerrain().getClass().toString().equals("class project.spring2017.maxwell9999.saco.model.Base")) {
-            showBuyButton = true;
+            if (lastClickedSquare.getTerrain().getTeam() == game.getCurrentTeamTurn()) {
+               showBuyButton = true;
+            }
          } else {
             showBuyButton = false;
          }
@@ -202,13 +210,44 @@ public class Play extends BasicGameState {
    private boolean buttonClicked(int mouseX, int mouseY) {
       // buy infantry button
       if (mouseX >= 25 && mouseX <= 197 && mouseY >= 300 && mouseY <= 340) {
+         UnitFactory unitFactory = new UnitFactory();
+         Unit newUnit = unitFactory.createUnit("inf", game.getCurrentTeamTurn());
+         lastClickedSquare.setUnit(newUnit);
+         map.addUnit(newUnit);
          return true;
       }
-      if (mouseX >= 25 && mouseX <= 197 && mouseY >= 360 && mouseY <= 400) {
+      // move button
+      if (mouseX >= 25 && mouseX <= 121 && mouseY >= 360 && mouseY <= 400) {
+         map.clearAllMoveAttackOptions();
          game.findMoveOptions(lastClickedSquare);
          helpText += "Click a highlighted square\nto move to it.";
          return true;
       }
+      // attack button
+      if (mouseX >= 25 && mouseX <= 130 && mouseY >= 420 && mouseY <= 460) {
+         map.clearAllMoveAttackOptions();
+         game.findBattleOptions(lastClickedSquare);
+         helpText += "Click a highlighted enemy\nto attack to it.";
+         return true;
+      }
+      // capture button
+      if (mouseX >= 150 && mouseX <= 270 && mouseY >= 420 && mouseY <= 460) {
+         return true;
+      }
+      // wait button
+      if (mouseX >= 25 && mouseX <= 113 && mouseY >= 480 && mouseY <= 520) {
+         return true;
+      }
+      // delete button
+      if (mouseX >= 150 && mouseX <= 254 && mouseY >= 480 && mouseY <= 520) {
+         return true;
+      }
+      // end turn button
+      if (mouseX >= 25 && mouseX <= 153 && mouseY >= 540 && mouseY <= 580) {
+         game.endCurrentTeamTurn();
+         return true;
+      }
+
       return false;
    }
 
@@ -246,8 +285,12 @@ public class Play extends BasicGameState {
 
    private void staticsRenderer() {
       // render title
-      graphics.drawString(mapTitle.toUpperCase(), 500, 50);
+      graphics.drawString(mapTitle.toUpperCase(), leftMostX, 50);
       // render player names
+      graphics.drawString(game.player1.name, leftMostX, upperMostY - 50);
+      graphics.drawString(game.player2.name, leftMostX + map.rows() * 16, upperMostY - 50);
+      // render money
+
    }
 
    private void helpTextRenderer() {
@@ -320,7 +363,7 @@ public class Play extends BasicGameState {
                   plain.draw(leftMostX + 16 * i, upperMostY + 16 * j);
             }
 
-            if (currentSquare.getInMoveRange()) {
+            if (currentSquare.getInMoveRange() || currentSquare.getInAttackRange()) {
                selected.draw(leftMostX + 16 * i, upperMostY + 16 * j);
             }
 

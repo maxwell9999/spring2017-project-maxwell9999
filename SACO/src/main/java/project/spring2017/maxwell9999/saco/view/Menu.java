@@ -44,8 +44,9 @@ public class Menu extends BasicGameState {
          int mouseX = inputHandler.getMouseX();
          int mouseY = inputHandler.getMouseY();
 
-         if ((mouseX >= 445 && mouseX <= 578) && (mouseY >= 225 && mouseY <= 265)) {
-            arg1.enterState(Game.PLAY_STATE);
+         if (((mouseX >= 445 && mouseX <= 578) && (mouseY >= 225 && mouseY <= 265)) ||
+               ((mouseX >= 424 && mouseX <= 599) && (mouseY >= 275 && mouseY <= 315))) {
+            arg1.enterState(Game.OPTIONS_STATE);
          }
       }
    }

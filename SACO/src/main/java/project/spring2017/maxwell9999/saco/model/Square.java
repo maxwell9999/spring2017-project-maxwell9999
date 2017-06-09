@@ -5,6 +5,7 @@ public class Square {
    public final static int SQUARE_SIZE = 16;
 
    private boolean inMoveRange = false;
+   private boolean inAttackRange = false;
    private int row;
    private int col;
    private Terrain terrain;
@@ -46,6 +47,14 @@ public class Square {
       return inMoveRange;
    }
 
+   public void setInAttackRange(boolean inAttackRange) {
+      this.inAttackRange = inAttackRange;
+   }
+
+   public boolean getInAttackRange() {
+      return inAttackRange;
+   }
+
    public void setUnit(Unit unit) {
       this.unit = unit;
    }
@@ -65,6 +74,7 @@ public class Square {
       int healthRemaining = terrain.capture((int) this.unit.health);
       if (healthRemaining <= 0) {
          terrain.setTeam(unit.team);
+         terrain.setHealth(20);
       }
    }
 

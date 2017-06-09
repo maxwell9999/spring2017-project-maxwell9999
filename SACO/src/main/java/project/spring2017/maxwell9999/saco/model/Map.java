@@ -65,10 +65,11 @@ public class Map {
       units.add(u);
    }
 
-   public void clearAllMoveOptions() {
+   public void clearAllMoveAttackOptions() {
       for (int i = 0; i < rows; i++) {
          for (int j = 0; j < cols; j++) {
             grid[i][j].setInMoveRange(false);
+            grid[i][j].setInAttackRange(false);
          }
       }
    }

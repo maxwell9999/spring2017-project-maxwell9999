@@ -45,9 +45,9 @@ public class Game extends StateBasedGame {
    public static final int ORANGE_STAR = 1;
    public static final int BLUE_MOON = 2;
 
-   private Player player1;
-   private Player player2;
-   private Opponent computer;
+   public Player player1;
+   public Player player2;
+   public Opponent computer;
    private int currentTeamTurn;
 
    private Map map;
@@ -57,11 +57,24 @@ public class Game extends StateBasedGame {
       super(title);
       this.mapRead("resources/maps/testmap2");
       this.addState(new Menu());
+      this.addState(new Options(this));
       this.addState(new Play(this, mapTitle));
       this.currentTeamTurn = ORANGE_STAR;
    }
 
-   public double calculateDamage(Square attacker, Square defender) {
+   public void setPlayers(String player1Name) {
+      player1 = new Player(player1Name);
+      player2 = null;
+      computer = new Opponent();
+   }
+
+   public void setPlayers(String player1Name, String player2Name) {
+      player1 = new Player(player1Name);
+      player2 = new Player(player2Name);
+      computer = null;
+   }
+
+   private double calculateDamage(Square attacker, Square defender) {
       // formula from awbw.wikia.com/wiki/Damage_Formula
       // damage chart from awbw.amarriner.com/damage.php
       // Note: ideally the chart would but fully mapped
@@ -73,19 +86,55 @@ public class Game extends StateBasedGame {
 
       int randInt = ThreadLocalRandom.current().nextInt(0, 10);
 
-      damagePercent = ((55/100.00) + randInt) *
+      damagePercent = ((55) + randInt) *
                       (attacker.getUnit().getHealth()/10) *
-                      ((200 - (defender.getTerrain().getDefense() *
+                      ((200 - (100 + defender.getTerrain().getDefense() *
                                defender.getUnit().getHealth()))/100.00);
+
+      System.out.println("damage: " + damagePercent);
 
       return damagePercent;
    }
 
    public void battle(Square attacker, Square defender) {
-      defender.getUnit().dealDamage(calculateDamage(attacker, defender));
-      attacker.getUnit().dealDamage(calculateDamage(defender, attacker));
+      Unit attackingUnit = attacker.getUnit();
+      Unit defendingUnit = defender.getUnit();
+      defendingUnit.dealDamage(calculateDamage(attacker, defender)/100);
+      if (defendingUnit.getHealth() <= 0) {
+         defender.setUnit(null);
+      } else {
+         attackingUnit.dealDamage(calculateDamage(defender, attacker)/100);
+      }
+      if (attackingUnit.getHealth() <= 0) {
+         attacker.setUnit(null);
+      }
+      map.clearAllMoveAttackOptions();
    }
 
+   public void findBattleOptions(Square currentSquare) {
+      int attackingTeam = currentSquare.getUnit().getTeam();
+      Square nextSquare;
+      //North
+      nextSquare = map.getSquare(currentSquare.getRow(), currentSquare.getCol() - 1);
+      if (nextSquare != null && nextSquare.getUnit() != null && nextSquare.getUnit().getTeam() != attackingTeam) {
+         nextSquare.setInAttackRange(true);
+      }
+      //East
+      nextSquare = map.getSquare(currentSquare.getRow() + 1, currentSquare.getCol());
+      if (nextSquare != null && nextSquare.getUnit() != null && nextSquare.getUnit().getTeam() != attackingTeam) {
+         nextSquare.setInAttackRange(true);
+      }
+      //South
+      nextSquare = map.getSquare(currentSquare.getRow(), currentSquare.getCol() + 1);
+      if (nextSquare != null && nextSquare.getUnit() != null && nextSquare.getUnit().getTeam() != attackingTeam) {
+         nextSquare.setInAttackRange(true);
+      }
+      //West
+      nextSquare = map.getSquare(currentSquare.getRow() - 1, currentSquare.getCol());
+      if (nextSquare != null && nextSquare.getUnit() != null && nextSquare.getUnit().getTeam() != attackingTeam) {
+         nextSquare.setInAttackRange(true);
+      }
+   }
 
    public void findMoveOptions(Square currentSquare) {
 
@@ -146,7 +195,7 @@ public class Game extends StateBasedGame {
       Unit moving = start.getUnit();
       start.setUnit(null);
       end.setUnit(moving);
-      map.clearAllMoveOptions();
+      map.clearAllMoveAttackOptions();
    }
 
    /**
