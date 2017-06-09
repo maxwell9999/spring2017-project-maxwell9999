@@ -32,3 +32,19 @@ Advance Wars information: http://advancewars.wikia.com/wiki/Advance_Wars_(game)
 ## Part 2: Computer Opponent
 
 ## Part 3: SACO Code Documentation
+
+### MVC Architecture
+
+### Design Patterns Used:
+- Singleton Pattern for resource files
+- Factory Pattern to create units
+- Observer and State Pattern as part of slick 2d
+- Strategy Pattern (to be implemented) for AI
+
+### What I like about the project:
+- The modular structure of the code allows easy additions.
+
+### What I learned:
+- How to use slick 2d to some degree (not the most straightforward)
+- How to implement design patterns within an architecture
+- Using code writing tools: SonarQube/CheckStyle
