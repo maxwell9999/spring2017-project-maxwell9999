@@ -19,7 +19,7 @@ mountain, none
 mountain, none
 mountain, none
 plain, none
-plain, bminfantry
+plain, none
 orangestarbase, osinfantry
 plain, none
 orangestarcity, none
@@ -52,6 +52,7 @@ plain, none
 plain, none
 plain, none
 plain, none
+plain, bminfantry
 plain, none
 plain, none
 plain, none
@@ -79,8 +80,7 @@ plain, none
 plain, none
 plain, none
 plain, none
-plain, none
-plain, none
+plain, bminfantry
 plain, none
 plain, none
 plain, none
@@ -367,14 +367,14 @@ plain, none
 plain, none
 plain, none
 plain, none
+bluemoonbase, none
 plain, none
 plain, none
 plain, none
 plain, none
 plain, none
 plain, none
-plain, none
-bluemoonhq, none
+bluemoonhq, osinfantry
 plain, none
 plain, none
 plain, none
