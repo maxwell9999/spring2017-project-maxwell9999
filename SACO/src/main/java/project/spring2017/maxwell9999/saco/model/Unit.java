@@ -11,7 +11,6 @@ public abstract class Unit {
    boolean active;
    boolean canStillMove = true;
    boolean canStillCapture = true;
-   //boolean canStillAttack;
 
    public Unit(int id, int team, boolean terrainAffected, int movement, int cost, boolean active) {
       this.id = id;
@@ -70,7 +69,9 @@ public abstract class Unit {
       health -= damage;
    }
 
-   public boolean equals(Unit unit) {
+   @Override
+   public boolean equals(Object obj) {
+      Unit unit = (Unit) obj;
       return this.id == unit.id;
    }
 }

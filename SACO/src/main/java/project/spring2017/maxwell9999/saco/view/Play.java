@@ -1,15 +1,10 @@
 package project.spring2017.maxwell9999.saco.view;
 
-import java.util.ArrayList;
-
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -77,8 +72,8 @@ public class Play extends BasicGameState {
 
    Image osInfantry;
    Image bmInfantry;
-   Image gs_osInfantry;
-   Image gs_bmInfantry;
+   Image osInfantryGrey;
+   Image bmInfantryGrey;
 
    private Game game;
    private Map map;
@@ -124,8 +119,8 @@ public class Play extends BasicGameState {
       // load unit related resources
       osInfantry = new Image("resources/images/osinfantry.gif");
       bmInfantry = new Image("resources/images/bminfantry.gif");
-      gs_osInfantry = new Image("resources/images/gs_osinfantry.gif");
-      gs_bmInfantry = new Image("resources/images/gs_bminfantry.gif");
+      osInfantryGrey = new Image("resources/images/gs_osinfantry.gif");
+      bmInfantryGrey = new Image("resources/images/gs_bminfantry.gif");
 
       zeroIcon = new Image("resources/images/0.gif");
       oneIcon = new Image("resources/images/1.gif");
@@ -161,8 +156,6 @@ public class Play extends BasicGameState {
       if (showUnitMenu) {
          displayUnitMenu(lastClickedUnit);
       }
-//      displayTerrainInfo();
-
 
       if (moveButtonSelected) {
          helpText += "Click a highlighted square\nto move to it.";
@@ -188,7 +181,7 @@ public class Play extends BasicGameState {
 
    @Override
    public void update(GameContainer arg0, StateBasedGame arg1, int arg2) throws SlickException {
-      if (game.winStatesSet) {
+      if (game.getWinStatesSet()) {
          arg1.enterState(Game.END_GAME_STATE);
       }
    }
@@ -219,10 +212,10 @@ public class Play extends BasicGameState {
          Square previousClickedSquare = lastClickedSquare;
          lastClickedSquare = map.getSquare(boardX / 16, boardY / 16);
          Unit unit = lastClickedSquare.getUnit();
-         if (lastClickedSquare.getInMoveRange() == true) {
+         if (lastClickedSquare.getInMoveRange()) {
             game.move(previousClickedSquare, lastClickedSquare);
          }
-         if (lastClickedSquare.getInAttackRange() == true) {
+         if (lastClickedSquare.getInAttackRange()) {
             game.battle(previousClickedSquare, lastClickedSquare);
             lastClickedUnit.setActive(false);
          }
@@ -233,10 +226,10 @@ public class Play extends BasicGameState {
          } else {
             showUnitMenu = false;
          }
-         if (lastClickedSquare.getTerrain().getClass().toString().equals("class project.spring2017.maxwell9999.saco.model.Base")) {
-            if (lastClickedSquare.getTerrain().getTeam() == game.getCurrentTeamTurn()) {
-               showBuyButton = true;
-            }
+         if (lastClickedSquare.getTerrain().getClass().toString().equals(
+               "class project.spring2017.maxwell9999.saco.model.Base") &&
+               lastClickedSquare.getTerrain().getTeam() == game.getCurrentTeamTurn()) {
+            showBuyButton = true;
          } else {
             showBuyButton = false;
          }
@@ -319,14 +312,14 @@ public class Play extends BasicGameState {
       helpText += "Choose an option for this unit. \n";
 
       if (lastClickedUnit.getTeam() == game.getCurrentTeamTurn()) {
-         //display unit option buttons (move, attack, capture, etc.);
+         //display unit option buttons (move, attack, capture, etc.)
          move.draw(25, 360);
          attack.draw(25, 420);
          capture.draw(150, 420);
          wait.draw(25, 480);
          delete.draw(150, 480);
       }
-      //display unit statistics
+      //display unit statistics (to be added)
 
    }
 
@@ -339,17 +332,15 @@ public class Play extends BasicGameState {
       endTurn.draw(25, 540);
    }
 
-//   private void displayTerrainInfo() {
-//
-//   }
+   // display terrain info to be added
 
    private void staticsRenderer() {
       // render title
       graphics.drawString(mapTitle.toUpperCase(), leftMostX, 50);
       // render player names
-      graphics.drawString(game.player1.name, leftMostX, upperMostY - 50);
-      graphics.drawString(game.player2.name, leftMostX + map.rows() * 16, upperMostY - 50);
-      // render money
+      graphics.drawString(game.player1.getName(), leftMostX, upperMostY - 50);
+      graphics.drawString(game.player2.getName(), leftMostX + map.rows() * 16, upperMostY - 50);
+      // render money (to be added)
 
    }
 
@@ -433,19 +424,21 @@ public class Play extends BasicGameState {
                continue;
             }
 
+            // RE: sonarqube smell: this is a switch statement
+            // to increase extension when more unit types are added
             switch (currentUnit.getClass().toString()) {
                case "class project.spring2017.maxwell9999.saco.model.Infantry":
                   if (currentUnit.getTeam() == Game.ORANGE_STAR) {
                      if (currentUnit.getActive()) {
                         osInfantry.draw(leftMostX + 16 * i, upperMostY + 16 * j);
                      } else {
-                        gs_osInfantry.draw(leftMostX + 16 * i, upperMostY + 16 * j);
+                        osInfantryGrey.draw(leftMostX + 16 * i, upperMostY + 16 * j);
                      }
                   } else {
                      if (currentUnit.getActive()) {
                         bmInfantry.draw(leftMostX + 16 * i, upperMostY + 16 * j);
                      } else {
-                        gs_bmInfantry.draw(leftMostX + 16 * i, upperMostY + 16 * j);
+                        bmInfantryGrey.draw(leftMostX + 16 * i, upperMostY + 16 * j);
                      }
                   }
                   break;

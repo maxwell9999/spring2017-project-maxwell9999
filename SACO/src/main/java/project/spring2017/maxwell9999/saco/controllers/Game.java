@@ -3,7 +3,7 @@ package project.spring2017.maxwell9999.saco.controllers;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStreamReader;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.newdawn.slick.AppGameContainer;
@@ -50,19 +50,23 @@ public class Game extends StateBasedGame {
    public Player player2;
    public Opponent computer;
    private int currentTeamTurn;
-   public boolean winStatesSet;
+   private boolean winStatesSet;
 
    private Map map;
    private String mapTitle;
 
    public Game(String title) {
       super(title);
-      this.mapRead("resources/maps/testmap2");
+      try {
+         this.mapRead("resources/maps/testmap2");
+      } catch (Exception e) {
+      }
       this.addState(new Menu());
       this.addState(new Options(this));
       this.addState(new Play(this, mapTitle));
       this.addState(new EndGame(this));
       this.currentTeamTurn = ORANGE_STAR;
+      this.winStatesSet = false;
    }
 
    public void setPlayers(String player1Name) {
@@ -93,8 +97,6 @@ public class Game extends StateBasedGame {
                       (attacker.getUnit().getHealth()/10) *
                       ((200 - (100 + defender.getTerrain().getDefense() *
                                defender.getUnit().getHealth()))/100.00);
-
-      System.out.println("damage: " + damagePercent);
 
       return damagePercent;
    }
@@ -159,8 +161,10 @@ public class Game extends StateBasedGame {
          return;
       }
 
-      //is there a terrain obstacle at this square?
-      //if (currentSquare.getTerrain()/*is passable*/)
+      //is there a terrain obstacle at this square? (to be added)
+
+
+      int newTerrainCovered = terrainCovered;
 
       //subtract movementCost of terrain from movement of unit
       //if non-negative
@@ -169,7 +173,7 @@ public class Game extends StateBasedGame {
          return;
       } else if (lastDirection != 0) {
          currentSquare.setInMoveRange(true);
-         terrainCovered += currentSquare.getTerrain().getMovementCost();
+         newTerrainCovered += currentSquare.getTerrain().getMovementCost();
       }
 
       //recursively check in each cardinal directionto determine possible moves
@@ -178,22 +182,22 @@ public class Game extends StateBasedGame {
       //North
       if (lastDirection != SOUTH) {
          nextSquare = map.getSquare(currentSquare.getRow(), currentSquare.getCol() - 1);
-         findMoveOptionsRecurs(unit, nextSquare, terrainCovered, NORTH);
+         findMoveOptionsRecurs(unit, nextSquare, newTerrainCovered, NORTH);
       }
       //East
       if (lastDirection != WEST) {
          nextSquare = map.getSquare(currentSquare.getRow() + 1, currentSquare.getCol());
-         findMoveOptionsRecurs(unit, nextSquare, terrainCovered, EAST);
+         findMoveOptionsRecurs(unit, nextSquare, newTerrainCovered, EAST);
       }
       //South
       if (lastDirection != NORTH) {
          nextSquare = map.getSquare(currentSquare.getRow(), currentSquare.getCol() + 1);
-         findMoveOptionsRecurs(unit, nextSquare, terrainCovered, SOUTH);
+         findMoveOptionsRecurs(unit, nextSquare, newTerrainCovered, SOUTH);
       }
       //West
       if (lastDirection != EAST) {
          nextSquare = map.getSquare(currentSquare.getRow() - 1, currentSquare.getCol());
-         findMoveOptionsRecurs(unit, nextSquare, terrainCovered, WEST);
+         findMoveOptionsRecurs(unit, nextSquare, newTerrainCovered, WEST);
       }
 
    }
@@ -207,11 +211,14 @@ public class Game extends StateBasedGame {
 
    /**
     * Read the map information in from a CSV file
+    * @throws Exception
     */
-   public void mapRead(String filename) {
+   public void mapRead(String filename) throws Exception {
+
+      CSVReader reader = null;
 
       try {
-         CSVReader reader = new CSVReader(new FileReader(filename));
+         reader = new CSVReader(new FileReader(filename));
 
          // holds map data: title, width, height
          String[] firstLine;
@@ -225,7 +232,8 @@ public class Game extends StateBasedGame {
 
          if ((firstLine = reader.readNext()) != null) {
             if (firstLine.length != 3) {
-               //throw new FileFormatException();
+               // log that the first has a format error
+               throw new Exception();
             }
             this.mapTitle = firstLine[0].trim();
             rowVal = Integer.valueOf(firstLine[1].trim());
@@ -240,7 +248,9 @@ public class Game extends StateBasedGame {
                //nextLine is next terrain info
                nextLine = reader.readNext();
                if (nextLine == null || nextLine.length != 2) {
-                  //throw new FileFormatException();
+                  // log that there is a blank line
+                  // or a line is missing a value
+                  throw new Exception();
                }
 
                numOfSquares++;
@@ -261,7 +271,7 @@ public class Game extends StateBasedGame {
                      terrain = new Sea(1000, 1, 20, false, NEUTRAL);
                      break;
                   case "croad":
-                     //terrain = new Road(1, 0, 20, false, NEUTRAL, orientationString);
+                     // to be added terrain = new Road(1, 0, 20, false, NEUTRAL, orientationString)
                      break;
                   case "neutralbase":
                      terrain = new Base(1, 3, 20, true, NEUTRAL);
@@ -311,16 +321,20 @@ public class Game extends StateBasedGame {
          }
 
          if (numOfSquares != rowVal*colVal) {
-            System.out.println("Incorrect file length");
-            //throw new FileFormatException();
+            // log that there is an incorrect number of lines
+            throw new Exception();
          }
 
-         reader.close();
-
-      } catch (FileNotFoundException e) {
-         e.printStackTrace();
       } catch (IOException e) {
          e.printStackTrace();
+      } catch (Exception e) {
+         // log
+      } finally {
+         try {
+            reader.close();
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
       }
    }
 
@@ -377,6 +391,10 @@ public class Game extends StateBasedGame {
          player1.setWinState(false);
          player2.setWinState(true);
       }
+   }
+
+   public boolean getWinStatesSet() {
+      return winStatesSet;
    }
 
    @Override

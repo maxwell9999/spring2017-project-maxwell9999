@@ -44,12 +44,12 @@ public class EndGame extends BasicGameState {
 
       String osOutcome;
       String bmOutcome;
-      osOutcome = game.player1.winState ? "wins!" : "loses.";
-      bmOutcome = game.player2.winState ? "wins!" : "loses.";
+      osOutcome = game.player1.getWinState() ? "wins!" : "loses.";
+      bmOutcome = game.player2.getWinState() ? "wins!" : "loses.";
 
       // render player names
-      graphics.drawString(game.player1.name + " (Orange Star) " + osOutcome, 300, 300);
-      graphics.drawString(game.player2.name + " (Blue Moon) " + bmOutcome, 724, 300);
+      graphics.drawString(game.player1.getName() + " (Orange Star) " + osOutcome, 300, 300);
+      graphics.drawString(game.player2.getName() + " (Blue Moon) " + bmOutcome, 724, 300);
 
    }
 
