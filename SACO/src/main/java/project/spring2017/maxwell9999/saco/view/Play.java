@@ -375,38 +375,35 @@ public class Play extends BasicGameState {
                   mountain.draw(leftMostX + 16 * i, upperMostY + 16 * (j-1) + 11);
                   break;
                case "class project.spring2017.maxwell9999.saco.model.HQ":
-                  switch (currentSquare.getTerrain().getTeam()) {
-                     case Game.ORANGE_STAR:
-                        orangestarhq.draw(leftMostX + 16 * i, upperMostY + 16 * (j-1) + 1);
-                        break;
-                     case Game.BLUE_MOON:
-                        bluemoonhq.draw(leftMostX + 16 * i, upperMostY + 16 * (j-1) + 1);
-                        break;
+                  if (currentSquare.getTerrain().getTeam() == Game.ORANGE_STAR) {
+                     orangestarhq.draw(leftMostX + 16 * i, upperMostY + 16 * (j-1) + 1);
+                  } else {
+                     bluemoonhq.draw(leftMostX + 16 * i, upperMostY + 16 * (j-1) + 1);
                   }
                   break;
                case "class project.spring2017.maxwell9999.saco.model.Base":
                   switch (currentSquare.getTerrain().getTeam()) {
-                     case Game.NEUTRAL:
-                        neutralbase.draw(leftMostX + 16 * i, upperMostY + 16 * (j-1) + 7);
-                        break;
                      case Game.ORANGE_STAR:
                         orangestarbase.draw(leftMostX + 16 * i, upperMostY + 16 * (j-1) + 7);
                         break;
                      case Game.BLUE_MOON:
                         bluemoonbase.draw(leftMostX + 16 * i, upperMostY + 16 * (j-1) + 7);
                         break;
+                     default : // is neutral
+                        neutralbase.draw(leftMostX + 16 * i, upperMostY + 16 * (j-1) + 7);
+                        break;
                   }
                   break;
                case "class project.spring2017.maxwell9999.saco.model.City":
                   switch (currentSquare.getTerrain().getTeam()) {
-                     case Game.NEUTRAL:
-                        neutralcity.draw(leftMostX + 16 * i, upperMostY + 16 * (j-1) + 10);
-                        break;
                      case Game.ORANGE_STAR:
                         orangestarcity.draw(leftMostX + 16 * i, upperMostY + 16 * (j-1) + 10);
                         break;
                      case Game.BLUE_MOON:
                         bluemooncity.draw(leftMostX + 16 * i, upperMostY + 16 * (j-1) + 10);
+                        break;
+                     default : // is neutral
+                        neutralbase.draw(leftMostX + 16 * i, upperMostY + 16 * (j-1) + 7);
                         break;
                   }
                   break;
@@ -478,6 +475,8 @@ public class Play extends BasicGameState {
                   break;
                case 9:
                   nineIcon.draw(leftMostX + 16 * i + 8, upperMostY + 16 * j + 9);
+                  break;
+               default :
                   break;
             }
          }

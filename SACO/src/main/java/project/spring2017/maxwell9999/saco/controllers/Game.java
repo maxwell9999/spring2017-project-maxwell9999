@@ -1,9 +1,7 @@
 package project.spring2017.maxwell9999.saco.controllers;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.newdawn.slick.AppGameContainer;
@@ -55,12 +53,9 @@ public class Game extends StateBasedGame {
    private Map map;
    private String mapTitle;
 
-   public Game(String title) {
+   public Game(String title) throws Exception {
       super(title);
-      try {
-         this.mapRead("resources/maps/testmap2");
-      } catch (Exception e) {
-      }
+      this.mapRead("resources/maps/testmap2");
       this.addState(new Menu());
       this.addState(new Options(this));
       this.addState(new Play(this, mapTitle));
@@ -402,7 +397,7 @@ public class Game extends StateBasedGame {
       enterState(MENU_STATE);
    }
 
-   public static void main(String[] args) {
+   public static void main(String[] args) throws Exception {
       AppGameContainer appGameContainer;
 
       try {

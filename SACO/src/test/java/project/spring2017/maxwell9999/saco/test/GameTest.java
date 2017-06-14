@@ -29,7 +29,7 @@ public class GameTest extends TestCase {
     /**
      * Rigourous Test :-)
      */
-    public void testGame() {
+    public void testGame() throws Exception {
        Game testGame = new Game("SACO");
 
        assertTrue(testGame != null);

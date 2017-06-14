@@ -1,6 +1,7 @@
 package project.spring2017.maxwell9999.saco.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -14,7 +15,8 @@ import java.util.ArrayList;
 public class Map {
 
    private Square[][] grid;
-   private int rows, cols;
+   private int rows;
+   private int cols;
    private ArrayList<Unit> units;
 
    public Map(int rows, int cols) {
@@ -22,7 +24,7 @@ public class Map {
       this.cols = cols;
 
       grid = new Square[rows][cols];
-      units = new ArrayList<Unit>();
+      units = new ArrayList<>();
    }
 
    // getters
@@ -52,7 +54,7 @@ public class Map {
       return cols;
    }
 
-   public ArrayList<Unit> getUnits() {
+   public List<Unit> getUnits() {
       return units;
    }
 
