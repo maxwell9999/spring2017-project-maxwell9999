@@ -35,16 +35,44 @@ public class GameTest
      */
     public void testGame()
     {
-        assertTrue(new Game("SACO") != null);
-    }
+       Game testGame = new Game("SACO");
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testPlain()
-    {
-       // can't test ui with slick2D
-       //assertTrue(new Plain(1, 20, false, 1) != null);
-    }
+       assertTrue(testGame != null);
 
+       // see if the map was read in
+       // exact check by visual inspection
+       Map testMap = testGame.getMap();
+       assertTrue(testMap != null);
+
+       // check current team
+       assertTrue(testGame.getCurrentTeamTurn() == Game.ORANGE_STAR);
+       testGame.endCurrentTeamTurn();
+       assertTrue(testGame.getCurrentTeamTurn() == Game.BLUE_MOON);
+       testGame.endCurrentTeamTurn();
+
+       // check battling and moving
+       assertTrue(testMap.getSquare(1, 1).getUnit() != null);
+       assertTrue(testMap.getSquare(3, 1).getUnit() == null);
+       testGame.move(testMap.getSquare(1, 1), testMap.getSquare(3, 1));
+       assertTrue(testMap.getSquare(1, 1).getUnit() == null);
+       assertTrue(testMap.getSquare(3, 1).getUnit() != null);
+       assertTrue(testMap.getSquare(4, 1).getUnit() != null);
+       testGame.battle(testMap.getSquare(3, 1), testMap.getSquare(4, 1));
+       assertTrue(testMap.getSquare(4, 1).getUnit().getHealth() < 10);
+
+       // Move options tested by visual inspection
+
+       // set players
+       testGame.setPlayers("test name 1", "test name 2");
+       assertTrue(testGame.player1.name.equals("test name 1"));
+       assertTrue(testGame.player2.name.equals("test name 2"));
+
+       // check win states
+       testGame.setWinStates(Game.ORANGE_STAR);
+       assertTrue(testGame.player1.winState == true &&
+                  testGame.player2.winState == false);
+       testGame.setWinStates(Game.BLUE_MOON);
+       assertTrue(testGame.player1.winState == false &&
+                  testGame.player2.winState == true);
+    }
 }
