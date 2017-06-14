@@ -9,32 +9,27 @@ import project.spring2017.maxwell9999.saco.model.*;
 /**
  * Unit test for simple App.
  */
-public class GameTest
-    extends TestCase
-{
+public class GameTest extends TestCase {
     /**
      * Create the test case
      *
      * @param testName name of the test case
      */
-    public GameTest( String testName )
-    {
-        super( testName );
+    public GameTest(String testName) {
+        super(testName);
     }
 
     /**
      * @return the suite of tests being tested
      */
-    public static Test suite()
-    {
-        return new TestSuite( GameTest.class );
+    public static Test suite() {
+        return new TestSuite(GameTest.class);
     }
 
     /**
      * Rigourous Test :-)
      */
-    public void testGame()
-    {
+    public void testGame() {
        Game testGame = new Game("SACO");
 
        assertTrue(testGame != null);
@@ -64,15 +59,15 @@ public class GameTest
 
        // set players
        testGame.setPlayers("test name 1", "test name 2");
-       assertTrue(testGame.player1.name.equals("test name 1"));
-       assertTrue(testGame.player2.name.equals("test name 2"));
+       assertTrue(testGame.player1.getName().equals("test name 1"));
+       assertTrue(testGame.player2.getName().equals("test name 2"));
 
        // check win states
        testGame.setWinStates(Game.ORANGE_STAR);
-       assertTrue(testGame.player1.winState == true &&
-                  testGame.player2.winState == false);
+       assertTrue(testGame.player1.getWinState() == true &&
+                  testGame.player2.getWinState() == false);
        testGame.setWinStates(Game.BLUE_MOON);
-       assertTrue(testGame.player1.winState == false &&
-                  testGame.player2.winState == true);
+       assertTrue(testGame.player1.getWinState() == false &&
+                  testGame.player2.getWinState() == true);
     }
 }

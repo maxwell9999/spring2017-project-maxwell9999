@@ -36,9 +36,9 @@ public class PlayerTest extends TestCase {
       assertTrue(testPlayer != null);
 
       testPlayer.setWinState(true);
-      assertTrue(testPlayer.winState);
+      assertTrue(testPlayer.getWinState());
       testPlayer.setWinState(false);
-      assertTrue(!testPlayer.winState);
+      assertTrue(!testPlayer.getWinState());
 
    }
 
