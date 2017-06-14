@@ -137,7 +137,7 @@ public class Play extends BasicGameState {
       sevenIcon = new Image("resources/images/7.gif");
       eightIcon = new Image("resources/images/8.gif");
       nineIcon = new Image("resources/images/9.gif");
-      captureIcon = new Image("resources/images/selected.gif");
+      captureIcon = new Image("resources/images/capture.gif");
       selected = new Image("resources/images/selected.gif");
       selected.setAlpha((float) 0.5);
 
