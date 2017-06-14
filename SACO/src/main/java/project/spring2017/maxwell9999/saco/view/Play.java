@@ -29,8 +29,8 @@ public class Play extends BasicGameState {
 
    Graphics graphics;
    Input inputHandler;
-   int leftMostX = 0;
-   int upperMostY = 0;
+   float leftMostX = 0;
+   float upperMostY = 0;
 
    Image plain;
    Image wood;
@@ -202,15 +202,15 @@ public class Play extends BasicGameState {
 
       // check if the user clicked on the board
       // find the square the mouse is by using the pixels relative to the board
-      int boardX = mouseX - leftMostX;
-      int boardY = mouseY - upperMostY;
+      float boardX = mouseX - leftMostX;
+      float boardY = mouseY - upperMostY;
 
       // if user clicked on board
       // X value divided by 16 is row, x val / 16 is column
       if (boardX >= 0 && boardY >= 0) {
          // save the current value in lastClickedSquare to move a unit
          Square previousClickedSquare = lastClickedSquare;
-         lastClickedSquare = map.getSquare(boardX / 16, boardY / 16);
+         lastClickedSquare = map.getSquare((int)boardX / 16, (int)boardY / 16);
          Unit unit = lastClickedSquare.getUnit();
          if (lastClickedSquare.getInMoveRange()) {
             game.move(previousClickedSquare, lastClickedSquare);
