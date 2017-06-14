@@ -67,15 +67,17 @@ public class Square {
       return this.terrain;
    }
 
-   public void capture() {
+   public int capture() {
       if (unit == null) {
-         return;
+         return -1;
       }
       int healthRemaining = terrain.capture((int) this.unit.health);
       if (healthRemaining <= 0) {
          terrain.setTeam(unit.team);
          terrain.setHealth(20);
+         return unit.team;
       }
+      return terrain.getTeam();
    }
 
 }

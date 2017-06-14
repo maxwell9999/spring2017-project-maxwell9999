@@ -16,6 +16,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import project.spring2017.maxwell9999.saco.controllers.Game;
 import project.spring2017.maxwell9999.saco.model.Map;
 import project.spring2017.maxwell9999.saco.model.Square;
+import project.spring2017.maxwell9999.saco.model.Terrain;
 import project.spring2017.maxwell9999.saco.model.Unit;
 import project.spring2017.maxwell9999.saco.model.UnitFactory;
 
@@ -26,6 +27,7 @@ public class Play extends BasicGameState {
    boolean showTerrainInfo = false;
    boolean moveButtonSelected = false;
    boolean attackButtonSelected = false;
+   boolean showUnitCreationError = false;
 
    Unit lastClickedUnit = null;
    Square lastClickedSquare = null;
@@ -58,13 +60,20 @@ public class Play extends BasicGameState {
    Image selected;
    Image captureIcon;
 
+   Image zeroIcon;
+   Image oneIcon;
+   Image twoIcon;
+   Image threeIcon;
+   Image fourIcon;
+   Image fiveIcon;
+   Image sixIcon;
+   Image sevenIcon;
+   Image eightIcon;
+   Image nineIcon;
+
    Image buyInfantry;
 
    Image endTurn;
-
-   // each unit needs a separate image loaded
-   ArrayList<Image> osUnits = new ArrayList<Image>();
-   ArrayList<Image> bmUnits = new ArrayList<Image>();
 
    Image osInfantry;
    Image bmInfantry;
@@ -118,6 +127,16 @@ public class Play extends BasicGameState {
       gs_osInfantry = new Image("resources/images/gs_osinfantry.gif");
       gs_bmInfantry = new Image("resources/images/gs_bminfantry.gif");
 
+      zeroIcon = new Image("resources/images/0.gif");
+      oneIcon = new Image("resources/images/1.gif");
+      twoIcon = new Image("resources/images/2.gif");
+      threeIcon = new Image("resources/images/3.gif");
+      fourIcon = new Image("resources/images/4.gif");
+      fiveIcon = new Image("resources/images/5.gif");
+      sixIcon = new Image("resources/images/6.gif");
+      sevenIcon = new Image("resources/images/7.gif");
+      eightIcon = new Image("resources/images/8.gif");
+      nineIcon = new Image("resources/images/9.gif");
       captureIcon = new Image("resources/images/selected.gif");
       selected = new Image("resources/images/selected.gif");
       selected.setAlpha((float) 0.5);
@@ -151,6 +170,9 @@ public class Play extends BasicGameState {
       if (attackButtonSelected) {
          helpText += "Click a highlighted enemy\nto attack to it.";
       }
+      if (showUnitCreationError) {
+         helpText += "There is already a unit on this factory.";
+      }
       if (helpText == "") {
          helpText = "Click a square for unit, building\nand terrain information and options.";
       }
@@ -166,7 +188,9 @@ public class Play extends BasicGameState {
 
    @Override
    public void update(GameContainer arg0, StateBasedGame arg1, int arg2) throws SlickException {
-
+      if (game.winStatesSet) {
+         arg1.enterState(Game.END_GAME_STATE);
+      }
    }
 
    @Override
@@ -224,10 +248,14 @@ public class Play extends BasicGameState {
    private boolean buttonClicked(int mouseX, int mouseY) {
       // buy infantry button
       if (mouseX >= 25 && mouseX <= 197 && mouseY >= 300 && mouseY <= 340) {
-         UnitFactory unitFactory = new UnitFactory();
-         Unit newUnit = unitFactory.createUnit("inf", game.getCurrentTeamTurn(), false);
-         lastClickedSquare.setUnit(newUnit);
-         map.addUnit(newUnit);
+         if (lastClickedSquare.getUnit() == null) {
+            UnitFactory unitFactory = new UnitFactory();
+            Unit newUnit = unitFactory.createUnit("inf", game.getCurrentTeamTurn(), false);
+            lastClickedSquare.setUnit(newUnit);
+            map.addUnit(newUnit);
+         } else {
+            showUnitCreationError = true;
+         }
          return true;
       }
       // move button
@@ -249,8 +277,16 @@ public class Play extends BasicGameState {
       }
       // capture button
       if (mouseX >= 150 && mouseX <= 270 && mouseY >= 420 && mouseY <= 460) {
-         if (lastClickedUnit.canStillCapture() && lastClickedSquare.getTerrain().isCapturable()) {
+         Terrain terrain = lastClickedSquare.getTerrain();
+         if (lastClickedUnit.canStillCapture() && terrain.isCapturable()) {
+            int beforeTeam = terrain.getTeam();
             lastClickedSquare.capture();
+            int afterTeam = terrain.getTeam();
+            if ( afterTeam != beforeTeam && terrain.getClass().toString().equals(
+                  "class project.spring2017.maxwell9999.saco.model.HQ")) {
+               // an hq was just capture, end the game
+               game.setWinStates(afterTeam);
+            }
          }
          lastClickedUnit.setCanStillCapture(false);
          return true;
@@ -319,7 +355,7 @@ public class Play extends BasicGameState {
 
    private void helpTextRenderer() {
       // render the help text
-      graphics.drawString(helpText, 25, 250);
+      graphics.drawString(helpText, 25, 200);
    }
 
    private void boardRenderer() {
@@ -412,6 +448,43 @@ public class Play extends BasicGameState {
                         gs_bmInfantry.draw(leftMostX + 16 * i, upperMostY + 16 * j);
                      }
                   }
+                  break;
+            }
+
+            if (currentUnit.canStillCapture() == false) {
+               captureIcon.draw(leftMostX + 16 * i + 8, upperMostY + 16 * j + 8);
+            }
+
+            switch ((int) currentUnit.getHealth()) {
+               case 0:
+                  zeroIcon.draw(leftMostX + 16 * i + 8, upperMostY + 16 * j + 9);
+                  break;
+               case 1:
+                  oneIcon.draw(leftMostX + 16 * i + 8, upperMostY + 16 * j + 9);
+                  break;
+               case 2:
+                  twoIcon.draw(leftMostX + 16 * i + 8, upperMostY + 16 * j + 9);
+                  break;
+               case 3:
+                  threeIcon.draw(leftMostX + 16 * i + 8, upperMostY + 16 * j + 9);
+                  break;
+               case 4:
+                  fourIcon.draw(leftMostX + 16 * i + 8, upperMostY + 16 * j + 9);
+                  break;
+               case 5:
+                  fiveIcon.draw(leftMostX + 16 * i + 8, upperMostY + 16 * j + 9);
+                  break;
+               case 6:
+                  sixIcon.draw(leftMostX + 16 * i + 8, upperMostY + 16 * j + 9);
+                  break;
+               case 7:
+                  sevenIcon.draw(leftMostX + 16 * i + 8, upperMostY + 16 * j + 9);
+                  break;
+               case 8:
+                  eightIcon.draw(leftMostX + 16 * i + 8, upperMostY + 16 * j + 9);
+                  break;
+               case 9:
+                  nineIcon.draw(leftMostX + 16 * i + 8, upperMostY + 16 * j + 9);
                   break;
             }
          }

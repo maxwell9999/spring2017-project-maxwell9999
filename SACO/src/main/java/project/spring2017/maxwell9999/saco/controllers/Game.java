@@ -36,19 +36,21 @@ public class Game extends StateBasedGame {
    public static final int SOUTH = 3;
    public static final int WEST = 4;
 
+   public static final int NEUTRAL = 0;
+   public static final int ORANGE_STAR = 1;
+   public static final int BLUE_MOON = 2;
+
    //game states
    public static final int MENU_STATE = 0;
    public static final int OPTIONS_STATE = 1;
    public static final int PLAY_STATE = 2;
-
-   public static final int NEUTRAL = 0;
-   public static final int ORANGE_STAR = 1;
-   public static final int BLUE_MOON = 2;
+   public static final int END_GAME_STATE = 3;
 
    public Player player1;
    public Player player2;
    public Opponent computer;
    private int currentTeamTurn;
+   public boolean winStatesSet;
 
    private Map map;
    private String mapTitle;
@@ -59,6 +61,7 @@ public class Game extends StateBasedGame {
       this.addState(new Menu());
       this.addState(new Options(this));
       this.addState(new Play(this, mapTitle));
+      this.addState(new EndGame(this));
       this.currentTeamTurn = ORANGE_STAR;
    }
 
@@ -99,16 +102,18 @@ public class Game extends StateBasedGame {
    public void battle(Square attacker, Square defender) {
       Unit attackingUnit = attacker.getUnit();
       Unit defendingUnit = defender.getUnit();
-      defendingUnit.dealDamage(calculateDamage(attacker, defender)/100);
+      defendingUnit.dealDamage(calculateDamage(attacker, defender)/10);
       if (defendingUnit.getHealth() <= 0) {
          map.removeUnit(defendingUnit);
          defender.setUnit(null);
+         checkUnitsExist(defendingUnit.getTeam());
       } else {
-         attackingUnit.dealDamage(calculateDamage(defender, attacker)/100);
+         attackingUnit.dealDamage(calculateDamage(defender, attacker)/10);
       }
       if (attackingUnit.getHealth() <= 0) {
          map.removeUnit(attackingUnit);
          attacker.setUnit(null);
+         checkUnitsExist(attackingUnit.getTeam());
       }
       map.clearAllMoveAttackOptions();
    }
@@ -259,28 +264,28 @@ public class Game extends StateBasedGame {
                      //terrain = new Road(1, 0, 20, false, NEUTRAL, orientationString);
                      break;
                   case "neutralbase":
-                     terrain = new Base(2, 3, 20, true, NEUTRAL);
+                     terrain = new Base(1, 3, 20, true, NEUTRAL);
                      break;
                   case "neutralcity":
-                     terrain = new City(2, 3, 20, true, ORANGE_STAR);
+                     terrain = new City(1, 3, 20, true, ORANGE_STAR);
                      break;
                   case "orangestarhq":
-                     terrain = new HQ(2, 4, 20, true, ORANGE_STAR);
+                     terrain = new HQ(1, 4, 20, true, ORANGE_STAR);
                      break;
                   case "orangestarbase":
-                     terrain = new Base(2, 3, 20, true, ORANGE_STAR);
+                     terrain = new Base(1, 3, 20, true, ORANGE_STAR);
                      break;
                   case "orangestarcity":
-                     terrain = new City(2, 3, 20, true, ORANGE_STAR);
+                     terrain = new City(1, 3, 20, true, ORANGE_STAR);
                      break;
                   case "bluemoonhq":
-                     terrain = new HQ(2, 4, 20, true, BLUE_MOON);
+                     terrain = new HQ(1, 4, 20, true, BLUE_MOON);
                      break;
                   case "bluemoonbase":
-                     terrain = new Base(2, 3, 20, true, BLUE_MOON);
+                     terrain = new Base(1, 3, 20, true, BLUE_MOON);
                      break;
                   case "bluemooncity":
-                     terrain = new City(2, 3, 20, true, BLUE_MOON);
+                     terrain = new City(1, 3, 20, true, BLUE_MOON);
                      break;
                }
 
@@ -341,6 +346,36 @@ public class Game extends StateBasedGame {
             unit.setCanStillCapture(true);
             unit.setCanStillMove(true);
          }
+      }
+   }
+
+   /**
+    * checks to see if a side has any units
+    * if all units are destroyed on one side
+    * then other side wins
+    *
+    * this is only a win condition after both
+    * sides have had at least one unit therefore
+    * it is called upon a unit being destroyed
+    */
+   public void checkUnitsExist(int team) {
+      for (Unit unit : map.getUnits()) {
+         if (unit.getTeam() == team){
+            return;
+         }
+      }
+
+      setWinStates(team);
+   }
+
+   public void setWinStates(int winner) {
+      winStatesSet = true;
+      if (winner == ORANGE_STAR) {
+         player1.setWinState(true);
+         player2.setWinState(false);
+      } else {
+         player1.setWinState(false);
+         player2.setWinState(true);
       }
    }
 

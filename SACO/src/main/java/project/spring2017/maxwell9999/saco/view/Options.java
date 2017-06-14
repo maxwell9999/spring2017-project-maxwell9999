@@ -34,19 +34,18 @@ public class Options extends BasicGameState {
    }
 
    @Override
-   public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2) throws SlickException {
+   public void render(GameContainer arg0, StateBasedGame arg1, Graphics graphics) throws SlickException {
 
       //load resources
       Image startGameButton = new Image("resources/images/button_start-game.png");
 
       startGameButton.draw(436, 650);
 
-      Graphics graphics = arg0.getGraphics();
       graphics.drawString("OPTIONS", 485, 200);
-      graphics.drawString("Player 1", 300, 300);
+      graphics.drawString("Player 1 (Orange Star)", 300, 300);
       player1Name.setLocation(300, 350);
       player1Name.render(arg0, graphics);
-      graphics.drawString("Player 2", 724, 300);
+      graphics.drawString("Player 2 (Blue Moon)", 724, 300);
       player2Name.setLocation(724, 350);
       player2Name.render(arg0, graphics);
    }
