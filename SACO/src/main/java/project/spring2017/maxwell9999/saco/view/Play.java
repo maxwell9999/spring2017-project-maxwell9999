@@ -355,8 +355,8 @@ public class Play extends BasicGameState {
       // calculate the pixel value to center the board
       // after leaving 200 pixels for buttons on the left
       // this uses integer division so could be 1 pixel off center, not a big deal
-      leftMostX = ((Game.SCREEN_WIDTH + 200) / 2) - ((map.rows() * 16) / 2);
-      upperMostY = ((Game.SCREEN_HEIGHT )/ 2 ) - ((map.cols() * 16) / 2);
+      leftMostX = (float) (((Game.SCREEN_WIDTH + 200) / 2.0) - (float) ((map.rows() * 16) / 2.0));
+      upperMostY = (float) (((Game.SCREEN_HEIGHT )/ 2.0) - (float) ((map.cols() * 16) / 2.0));
 
       // render rows
       for (int i = 0; i < map.rows(); i++) {
